@@ -3,83 +3,64 @@ const bcryptjs = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 
-// Registrar un nuevo usuario
 exports.crearUsuario = async (req, res) => {
-    // Revisar si hay errores de validación con el usuario
+    //Revisar si hay errores de express-validator
     const errores = validationResult(req);
     if (!errores.isEmpty()) {
         return res.status(400).json({ errores: errores.array() });
     }
 
-    const { email, password } = req.body;
+    //Extraer datos del req.body (acepta 'nombre' o 'lider')
+    const { nombre, lider, email, password } = req.body;
 
     try {
-        // Validar que el usuario sea único
-        let usuario = await Usuario.findOne({ email });
-        if (usuario) {
-            return res.status(400).json({ msg: 'El usuario ya existe' });
+        //Asegurar que nombre tenga un valor
+        const nombreFinal = nombre || lider;
+
+        if (!nombreFinal) {
+            return res.status(400).json({ msg: 'El nombre del líder es obligatorio' });
         }
 
-        // Crear el nuevo usuario
-        usuario = new Usuario(req.body);
+        //Revisar que el usuario sea único
+        let usuario = await Usuario.findOne({ email });
+        if (usuario) {
+            return res.status(400).json({ msg: 'El usuario ya existe con este correo' });
+        }
 
-        // Hashear la contraseña
+        //Crear el nuevo usuario
+        usuario = new Usuario({
+            nombre: nombreFinal,
+            email,
+            password
+        });
+
+        //Hashear el password
         const salt = await bcryptjs.genSalt(10);
         usuario.password = await bcryptjs.hash(password, salt);
 
-        // Guardar en la BD
+        //Guardar usuario en BD
         await usuario.save();
 
-        // Crear y firmar el JWT
-        const payload = { usuario: { id: usuario.id } };
+        //Crear y firmar el JWT
+        const payload = {
+            usuario: {
+                id: usuario.id
+            }
+        };
 
-        jwt.sign(payload, process.env.JWT_SECRET, {
-            expiresIn: 3600 // Una hora
-        }, (error, token) => {
-            if (error) throw error;
-            res.json({ token, msg: 'Usuario creado correctamente' });
-        });
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).send('Hubo un error al registrar el usuario');
-    }   
-};
-
-// Autenticar / Login de usuario
-exports.autenticarUsuario = async (req, res) => {
-    const errores = validationResult(req);
-    if (!errores.isEmpty()) {
-        return res.status(400).json({ errores: errores.array() });
-    }
-
-    const { email, password } = req.body;
-
-    try {
-        // Revisar que sea un usuario registrado
-        let usuario = await Usuario.findOne({ email });
-        if (!usuario) {
-            return res.status(400).json({ msg: 'El usuario no existe' });
-        }
-
-        // Revisar la contraseña
-        const passCorrecto = await bcryptjs.compare(password, usuario.password);
-        if (!passCorrecto) {
-            return res.status(400).json({ msg: 'Contraseña incorrecta' });
-        }
-
-        // Si todo esta correcto, crear y firmar el JWT
-        const payload = { usuario: { id: usuario.id } };
-
-        jwt.sign(payload, process.env.JWT_SECRET, {
-            expiresIn: 3600 // Una hora
-        }, (error, token) => {
-            if (error) throw error;
-            res.json({ token, msg: 'Inicio de sesión exitoso' });
-        });
+        jwt.sign(
+            payload,
+            process.env.JWT_SECRET,
+            { expiresIn: 3600 },
+            (error, token) => {
+                if (error) throw error;
+                res.json({ token, msg: 'Usuario registrado con éxito' });
+            }
+        );
 
     } catch (error) {
         console.log(error);
-        res.status(500).send('Hubo un error en el servidor');
+        //Retornar JSON para que el frontend pueda leerlo adecuadamente
+        res.status(500).json({ msg: 'Hubo un error al procesar el registro en el servidor' });
     }
 };

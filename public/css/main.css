@@ -1,0 +1,72 @@
+/* fuente */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Logo del bar */
+.logo-navbar {
+    width: 35px; 
+    height: 35px;
+    object-fit: contain;
+}
+
+/* Fondo del Hero Section */
+.hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../recursos-img/maquina.jpg') center/cover;
+    padding: 100px 0;
+}
+
+/* Estilos para los títulos */
+.texto-neon {
+    color: #fff;
+    text-shadow: 
+        0 0 5px #0ff,
+        0 0 10px #0ff,
+        0 0 20px #0ff,
+        0 0 40px #00a3ff;
+}
+
+.titulo-seccion {
+    color: #0ff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Botones */
+.boton-neon {
+    background-color: transparent;
+    color: #0ff;
+    border: 2px solid #0ff;
+    box-shadow: 0 0 10px #0ff inset, 0 0 10px #0ff;
+    transition: 0.3s;
+}
+
+.boton-neon:hover {
+    background-color: #0ff;
+    color: #000;
+    box-shadow: 0 0 20px #0ff inset, 0 0 20px #0ff;
+}
+
+.boton-neon-borde {
+    border: 1px solid #0ff;
+    color: #0ff;
+}
+
+.boton-neon-borde:hover {
+    background-color: #0ff;
+    color: #000;
+}
+
+/* Efectos de las tarjetas*/
+.tarjeta-estares {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #333;
+}
+
+.tarjeta-estares:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 255, 255, 0.2) !important;
+    border-color: #0ff;
+}
