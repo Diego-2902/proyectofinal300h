@@ -22,10 +22,12 @@ app.get('/', (req, res) => {
     res.send('¡Hola! El servidor backend está funcionando.');
 });
 
-// Ruta de la aplicación
 app.use('/api/auth', require('./routes/auth'));
 
 // Inicio del servidor
 app.listen(PORT, () => {
     console.log(`El servidor está corriendo en el puerto ${PORT}`);
 });
+
+//Segundo formulario
+app.use('/api/reservas', require('./routes/reservas'));
