@@ -1,9 +1,9 @@
 //Primer formulario
-//Escuchador de evento: Formulario de inscripción de equipo
+//Evento: Formulario de inscripción de equipo
 document.getElementById('formInscripcion').addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    //Captura de los valores introducidos en el formulario de registro de equipo
+    //Formulario de registro de equipo
     const datosEquipo = {
         equipo: document.getElementById('logEquipo').value,    
         nombre: document.getElementById('logNombre').value,
@@ -16,7 +16,7 @@ document.getElementById('formInscripcion').addEventListener('submit', async (e) 
     const resDiv = document.getElementById('resInscripcion');
 
     try {
-        //Envio de los datos mediante una petición POST al servidor backend
+        //Envio de datos al servidor backend
         const respuesta = await fetch('http://127.0.0.1:4000/api/auth/registro', {
             method: 'POST',
             headers: {
@@ -27,21 +27,16 @@ document.getElementById('formInscripcion').addEventListener('submit', async (e) 
 
         const resultado = await respuesta.json();
 
-        //Muestra de la respuesta en el recuadro informativo del módulo
         resDiv.style.display = 'block';
 
         if (respuesta.ok) {
-            // 1. Guardas el token en segundo plano (sin mostrarlo en pantalla)
             localStorage.setItem('token', resultado.token);
 
-            // 2. Muestras solo un mensaje claro y bonito
             resDiv.className = 'mt-3 p-2 rounded bg-black text-success border border-success small';
             resDiv.textContent = '¡Equipo registrado exitosamente!';
 
-            // 3. Limpias los campos del formulario
             document.getElementById('formInscripcion').reset();
         } else {
-            // Si ocurre un error de validación o del backend
             resDiv.className = 'mt-3 p-2 rounded bg-black text-danger border border-danger small';
             resDiv.textContent = resultado.msg || 'Error al realizar la inscripción';
         }
@@ -55,7 +50,7 @@ document.getElementById('formInscripcion').addEventListener('submit', async (e) 
 
 //Segundo formulario
 
-//escuchador de evento: Formulario de reserva
+//Evento: Formulario de reserva
 document.getElementById('formRegistro').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -85,12 +80,10 @@ document.getElementById('formRegistro').addEventListener('submit', async (e) => 
         resDiv.style.display = 'block';
 
         if (respuesta.ok) {
-            //Mensaje de éxito
             resDiv.className = 'mt-3 p-2 rounded bg-black text-success border border-success small';
             resDiv.textContent = '¡Gracias por reservar! Por favor llegar 15 minutos antes de la hora reservada. Te esperamos.';
             document.getElementById('formRegistro').reset();
         } else {
-            // Si hay un error devuelto por el servidor
             resDiv.className = 'mt-3 p-2 rounded bg-black text-danger border border-danger small';
             resDiv.textContent = resultado.msg || 'Error al procesar la reserva';
         }
