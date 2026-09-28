@@ -13,4 +13,12 @@ router.post(
     authController.crearUsuario
 );
 
+router.post(
+    '/login',
+    [
+        check('email', 'Agrega un email válido').isEmail(),
+        check('password', 'El password es obligatorio').not().isEmpty()
+    ],
+    authController.autenticarUsuario
+);
 module.exports = router;
