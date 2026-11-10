@@ -23,11 +23,9 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/reservas', require('./routes/reservas'));
 
-// Inicio del servidor
+// Inicio del servidor (siempre al final)
 app.listen(PORT, () => {
     console.log(`El servidor está corriendo en el puerto ${PORT}`);
 });
-
-//Segundo formulario
-app.use('/api/reservas', require('./routes/reservas'));
