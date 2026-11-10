@@ -20,7 +20,7 @@ const UsuariosSchema = mongoose.Schema({
     },
     registro: {
         type: Date,
-        default: Date.now()
+        default: Date.now
     }
 });
 
